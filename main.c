@@ -11,6 +11,8 @@
 #include <time.h>
 #include "Water1/Water1.h"
 #include <wchar.h>
+#include <string.h>
+#include "Shaders1/MainShader.h"
 
 float lastX =  1200.0f / 2.0;
 float lastY =  900.0 / 2.0;
@@ -176,8 +178,8 @@ int main(int argc, char *argv[])
       win.he = 900;
       StaticObject1 Obj1;
       StaticObject1 Obj2; // main
-      // printf("-1\n");
-      LoadSetShaders(&Obj1.shaderMain, shader04vert, shader04frag);
+ 
+      LoadSetShaders(&Obj1.shaderMain, pathMainVert, pathMainFrag);
       PrepareObject(&Obj1, path, &Obj1.shaderMain);
       PrepareObject(&Obj2, path1, &Obj1.shaderMain);
       // printf("-2\n");
@@ -192,11 +194,14 @@ int main(int argc, char *argv[])
 
       Skybox1 skybox;
 
-      PrepareShaderAndBuffer(&skybox, skyboxVert, skyboxFrag);
+      PrepareShaderAndBuffer(&skybox, pathSkyboxVert, pathSkyboxFrag);
       LoadTexturesSkybox(&skybox);
       SetTextureForW(&water, &skybox.TextureID);
+      glEnable(GL_MULTISAMPLE_ARB);
       glEnable(GL_DEPTH_TEST);
+      glClearDepth(1);
       glDisable(GL_DITHER);
+    //   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //   testAddQ();
     while (!glfwWindowShouldClose(window))
     {

@@ -20,4 +20,6 @@ Lights1/Light1.h \
 Lights1/Light1.c \
 Water1/Water1.h \
 Water1/Water1.c \
+Shaders1/MainShader.h \
+Shaders1/MainShader.c \
 -DGLEW_STATIC -lGL -lGLEW -lGLX -lm -DSHM -lassimp -lglfw

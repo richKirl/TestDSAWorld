@@ -1,8 +1,10 @@
 #ifndef __SHPROGRAM1_T__
 #define __SHPROGRAM1_T__
 #include <GL/glew.h>
+#include "MainShader.h"
 struct ShProgram1_t
 {
+    MainShader sh;
     unsigned int shaderProgram;
     GLuint shaderF;
     GLuint shaderV;

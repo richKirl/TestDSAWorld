@@ -1,7 +1,7 @@
 #include "MainShader.h"
 
 
-void testOpenFile(MainShader *mShader,char *p,const char **FileMain,int *countL1)
+void testOpenFile(MainShader *mShader,const char *p,const char **FileMain,int *countL1)
 {
     FILE *file1 = fopen(&p[0], "r");
     char line1[256];
@@ -15,7 +15,7 @@ void testOpenFile(MainShader *mShader,char *p,const char **FileMain,int *countL1
             {
                 // fputs(line1, nameFile);
                 FileMain[countL]=malloc(sizeof(const char)*256);
-                strcpy(FileMain[countL], line1);
+                strcpy((char*)FileMain[countL], line1);
                 countL++;
                 // fputs("\n", nameFile);
             }
@@ -66,7 +66,7 @@ void openMainFiles(MainShader *mShader,const char **pathUtility,const char *sInc
             {
                 // FileMain=malloc(sizeof(char)*strlen(line));
                 FileMain[countL]=malloc(sizeof( char)*256);
-                strcpy(FileMain[countL], line);
+                strcpy((char*)FileMain[countL], line);
                 countL++;
                 // fputs(line, wfile);
                 // strcpy()
@@ -85,7 +85,7 @@ void openMainFiles(MainShader *mShader,const char **pathUtility,const char *sInc
         fprintf(stderr, "Unable to open file!\n");
     }
 }
-void calculateOpenFile(MainShader *mShader,char *p,long *sz,long *nlines)
+void calculateOpenFile(MainShader *mShader,const char *p,long *sz,long *nlines)
 {
     FILE *file1 = fopen(&p[0], "r");
     fseek(file1, 0L, SEEK_END);
@@ -196,7 +196,7 @@ void FreeMemoryForShader(MainShader *mShader,const char **FileVertexShaderMain,l
 {
     for (int l = 0; l < nlinesV; l++)
     {
-        free(FileVertexShaderMain[l]);
+        free((char*)FileVertexShaderMain[l]);
         // printf("%d\n",nlinesV);
     }
     free(FileVertexShaderMain);

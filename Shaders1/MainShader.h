@@ -30,9 +30,9 @@ struct MainShader_t
 typedef struct MainShader_t MainShader;
 
 void initMainShader(MainShader *mShader);
-void testOpenFile(MainShader *mShader,char *p,const char **FileMain,int *countL1);
+void testOpenFile(MainShader *mShader,const char *p,const char **FileMain,int *countL1);
 void openMainFiles(MainShader *mShader,const char **pathUtility,const char *sInclude,const char *pathMainVert,const char **FileMain);
-void calculateOpenFile(MainShader *mShader,char *p,long *sz,long *nlines);
+void calculateOpenFile(MainShader *mShader,const char *p,long *sz,long *nlines);
 void CalculateMainFiles(MainShader *mShader,const char **pathUtility,const char *sInclude,const char *pathMainVert,long *sz,long *nlines);
 void FileWrite(MainShader *mShader,const char* p,const char** fileW,long sz);
 void PrintLines(MainShader *mShader,const char** linesW,long sz);

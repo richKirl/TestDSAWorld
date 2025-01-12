@@ -15,15 +15,11 @@
 #include "Shaders1/MainShader.h"
 #include "Camera1/Camera1.h"
 
-bool firstMouse = true;
-bool toggleWariframe = false;
+bool firstMouse = false;
 bool tab = false;
+bool mouseHandleInCenter=false;
 Window1 win;
 Camera1 camera;
-bool toggleWarframe()
-{
-    return toggleWariframe;
-}
 
 vec2 mousePos = (vec2){0.0f, 0.0f};
 
@@ -50,12 +46,49 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 }
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
-    vec2 curMPos = WindowCenterPos(&win);
-    vec2 delta = Subv2(curMPos, (vec2){xposIn, yposIn});
-    rotateBy(&camera, -delta.x);
-    rotateUD(&camera, -delta.y);
-    glfwSetCursorPos(window, win.wi / 2, win.he / 2);
+    if (mouseHandleInCenter)
+    {
+        vec2 curMPos = WindowCenterPos(&win);
+        vec2 delta = Subv2(curMPos, (vec2){xposIn, yposIn});
+        rotateBy(&camera, -delta.x);
+        rotateUD(&camera, -delta.y);
+        glfwSetCursorPos(window, win.wi / 2, win.he / 2);
+    }
 }
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
+    {
+        tab=!tab;
+        tab ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE):glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        
+        // mouseHandleInCenter ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE):glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        if(firstMouse)
+        {
+            glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            mouseHandleInCenter=!mouseHandleInCenter;
+            firstMouse =!firstMouse;
+        }
+    }     
+
+}
+
+static void onMouseButton(GLFWwindow* window, int button, int action, int mods)
+{
+    if( button==GLFW_MOUSE_BUTTON_LEFT )
+    {
+        if(!firstMouse)
+        {
+            glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            firstMouse =true;
+            mouseHandleInCenter=true;
+        }
+    } 
+}
+
 int main(int argc, char *argv[])
 {
     GLFWwindow *window;
@@ -64,7 +97,8 @@ int main(int argc, char *argv[])
     window = win.win;
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-
+    glfwSetKeyCallback(window,key_callback);
+    glfwSetMouseButtonCallback(window,onMouseButton);
     CameraInit(&camera, (vec3){0.0f, 0.0f, 3.0f}, (vec3){0.0f, 0.0f, -1.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0, 0, 0}, 1.1f);
 
     Time1 ti;
@@ -73,8 +107,7 @@ int main(int argc, char *argv[])
     const char *path = "asset/models/SuzanneMiddle1.fbx";
     const char *path1 = "asset/models/SuzanneMiddle1.fbx";
     // printf("-1\n");
-    win.wi = 1200;
-    win.he = 900;
+
     StaticObject1 Obj1;
     StaticObject1 Obj2; // main
 
@@ -118,7 +151,7 @@ int main(int argc, char *argv[])
         // Render
         //  Render()models;
         //   if(tab) toggleWariframe=!toggleWariframe;
-        //   toggleWariframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE):glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        
         //-----------------------------------------------------------------------------------------
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // setLightAmbientAndDiffuse(&light,Obj1.shaderMain.shaderProgram,(vec3){0.0f,0.0f,5.0f},(vec3){0.8f, 0.8f, 0.8f},(vec3){0.0f,-1.0f,-1.0f},0.5f,true,(vec3){0.8f, 0.8f, 0.8f},false);

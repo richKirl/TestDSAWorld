@@ -22,4 +22,6 @@ Water1/Water1.h \
 Water1/Water1.c \
 Shaders1/MainShader.h \
 Shaders1/MainShader.c \
+Camera1/Camera1.h \
+Camera1/Camera1.c \
 -DGLEW_STATIC -lGL -lGLEW -lGLX -lm -DSHM -lassimp -lglfw

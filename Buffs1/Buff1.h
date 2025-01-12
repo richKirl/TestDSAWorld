@@ -21,5 +21,6 @@ void SetUniformInt(int n,unsigned int ShaderProgram,const char* name);
 void SetUniformFloat(float n,unsigned int ShaderProgram,const char* name);
 void SetUniformBool(bool n,unsigned int ShaderProgram,const char* name);
 void SetUniformVec3(vec3 n,unsigned int ShaderProgram,const char* name);
+void SetUniformVec4(vec4 n, unsigned int ShaderProgram, const char *name);
 // void RenderObject(Buff1 *buff);
 #endif

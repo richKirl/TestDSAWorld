@@ -117,3 +117,9 @@ void SetUniformVec3(vec3 n, unsigned int ShaderProgram, const char *name)
     GLint matrixId1 = glGetUniformLocation(ShaderProgram,name);
     glUniform3fv(matrixId1,1, (GLfloat*)&n);
 }
+
+void SetUniformVec4(vec4 n, unsigned int ShaderProgram, const char *name)
+{
+    GLint matrixId1 = glGetUniformLocation(ShaderProgram,name);
+    glUniform3fv(matrixId1,1, (GLfloat*)&n);
+}

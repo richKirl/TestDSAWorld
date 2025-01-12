@@ -58,7 +58,7 @@ struct Window1_t
 #endif
     int wi, he;
     GLFWwindow* win;
-
+    
 };
 typedef struct Window1_t Window1;
 

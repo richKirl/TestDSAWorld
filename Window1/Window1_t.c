@@ -285,8 +285,8 @@ void Initialize(int w, int h)
 
 void processInput(Window1 *w, Camera1 *camera)
 {
-    if (glfwGetKey(w->win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(w->win, GLFW_TRUE);
+    // if (glfwGetKey(w->win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    //     glfwSetWindowShouldClose(w->win, GLFW_TRUE);
     if (glfwGetKey(w->win, GLFW_KEY_W) == GLFW_PRESS)
         moveBy(camera, 1.0f);
     if (glfwGetKey(w->win, GLFW_KEY_S) == GLFW_PRESS)
@@ -295,12 +295,6 @@ void processInput(Window1 *w, Camera1 *camera)
         rotateBy(camera, 1.0f);
     if (glfwGetKey(w->win, GLFW_KEY_A) == GLFW_PRESS)
         rotateBy(camera, -1.0f);
-    // if(glfwGetKey(window, GLFW_KEY_TAB)  == GLFW_PRESS){
-    //     tab=true;
-    //     // toggleWariframe=!toggleWariframe;
-    // }
-    // if(glfwGetKey(window, GLFW_KEY_TAB)  == GLFW_RELEASE)
-    //     tab=false;
 }
 
 void initWindow(Window1 *w, int ww, int hh, const char *c)
@@ -326,7 +320,7 @@ void initWindow(Window1 *w, int ww, int hh, const char *c)
 
     glfwSetCursorPos(w->win, w->wi / 2, w->he / 2);
     // tell GLFW to capture our mouse
-    glfwSetInputMode(w->win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(w->win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glewExperimental = true;
     glewInit();
     glfwSwapInterval(1);

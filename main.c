@@ -14,6 +14,7 @@
 #include <string.h>
 #include "Shaders1/MainShader.h"
 #include "Camera1/Camera1.h"
+#include "Particles1/Particles1.h"
 
 bool firstMouse = false;
 bool tab = false;
@@ -64,14 +65,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
-        
-        // mouseHandleInCenter ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE):glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
         if(firstMouse)
         {
             glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             mouseHandleInCenter=!mouseHandleInCenter;
             firstMouse =!firstMouse;
         }
+        else if(!firstMouse) glfwSetWindowShouldClose(win.win, GLFW_TRUE);
     }     
 
 }
@@ -126,9 +127,18 @@ int main(int argc, char *argv[])
 
     Skybox1 skybox;
 
+
+
+
     PrepareShaderAndBuffer(&skybox, pathSkyboxVert, pathSkyboxFrag);
     LoadTexturesSkybox(&skybox);
     SetTextureForW(&water, &skybox.TextureID);
+
+
+    Particles particke;
+    InitParticles(&particke);
+    SetPosRotScaleP(&particke, (vec3){0.0f, 0.0f, 0.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){100.f, 100.f, 1.f});
+
     glEnable(GL_MULTISAMPLE_ARB);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1);
@@ -139,6 +149,7 @@ int main(int argc, char *argv[])
     {
         mat4 P = Perspectivem4(80.0f, (float)win.wi / win.he, 1.0f, 1100.0f);
         mat4 V = lookAtm4(camera.cameraPos, camera.vp, camera.cameraUp); // Addv3(cameraPos,cameraFront)
+        mat4 O = setOrthoFrustumm4(0.0f, (float)win.wi, 0.0f,(float)win.he, -1.0f, 2.f );
         //-----------------------------------------------------------------------------------------
         // updateIOFromWindow
         processInput(&win, &camera);
@@ -155,15 +166,22 @@ int main(int argc, char *argv[])
         //-----------------------------------------------------------------------------------------
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // setLightAmbientAndDiffuse(&light,Obj1.shaderMain.shaderProgram,(vec3){0.0f,0.0f,5.0f},(vec3){0.8f, 0.8f, 0.8f},(vec3){0.0f,-1.0f,-1.0f},0.5f,true,(vec3){0.8f, 0.8f, 0.8f},false);
-
+        
         // resetSh();
-
+        //gameObjects
         RenderObject(&Obj1, &V, &P, 1);
+        
         RenderObject(&Obj2, &V, &P, 1);
-        RenderObjectW(&water, &V, &P, 2, dt);
+        
+        //light
         setLightAmbientAndDiffuse(&light, Obj1.shaderMain.shaderProgram, (vec3){0.0f, 0.0f, 5.0f}, (vec3){1.0f, 1.0f, 1.0f}, (vec3){0.0f, -1.0f, -1.0f}, 0.5f, true, (vec3){0.5f, 0.5f, 0.5f}, true);
-
+        //Skybox
         RenderSkybox(&skybox, &V, &P);
+        //Water
+        RenderObjectW(&water, &V, &P, 2, dt);
+        //GUI
+        RenderParticles(&particke,&P,&O);
+        
         //-----------------------------------------------------------------------------------------
         // Present frame
         // UpdateBufferFromWindow
@@ -175,6 +193,7 @@ int main(int argc, char *argv[])
         dt += 0.01f;
         updateWindow(&win);
     }
+    closeParticles(&particke);
     CloseObject(&Obj1);
     CloseObject(&Obj2);
     CloseObjectW(&water);

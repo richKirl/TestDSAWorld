@@ -43,6 +43,7 @@ void LoadFragmentShader(ShProgram1 *sh, const char *shader)
 
 void LoadGeometryShader(ShProgram1 *sh, const char *shader)
 {
+
 }
 
 
@@ -81,5 +82,7 @@ void resetSh()
 }
 void delSh(ShProgram1 *sh)
 {
+    // glDetachShader(sh->shaderProgram, sh->shaderV);
+    // glDetachShader(sh->shaderProgram, sh->shaderF);
     glDeleteProgram(sh->shaderProgram);
 }

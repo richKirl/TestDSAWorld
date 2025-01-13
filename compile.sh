@@ -24,4 +24,6 @@ Shaders1/MainShader.h \
 Shaders1/MainShader.c \
 Camera1/Camera1.h \
 Camera1/Camera1.c \
+Particles1/Particles1.h \
+Particles1/Particles1.c \
 -DGLEW_STATIC -lGL -lGLEW -lGLX -lm -DSHM -lassimp -lglfw

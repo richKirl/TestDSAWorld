@@ -18,7 +18,7 @@ uniform Material materialL;
 uniform vec4 color;
 uniform int type;
 uniform samplerCube skybox;
-vec3 skyColor = vec3(0.1, 0.1, 0.3);
+vec3 skyColor = vec3(0.1, 0.1, 0.2);
 
 void main() {
     vec3 normal = normalize(ioVertexTexNormal);
@@ -30,9 +30,9 @@ void main() {
     }
     if(type == 2) {
         float ratio = 1.00 / 1.33;
-        vec3 I = normalize(vec3(1 - ioEyeSpacePosition));
-        vec3 R = reflect(I, - normal);
-        outputColor = mix(vec4(ioVColor, 0.3), vec4(texture(skybox, R).rgb, 0.4), .5) * vec4(lightColor, 1.0);  //*vec4(lightColor, 1.0)
-        outputColor = mix(vec4(skyColor, 1.), outputColor, abs(ioEyeSpacePosition.z / ioEyeSpacePosition.w));  //abs(ioEyeSpacePosition.z / ioEyeSpacePosition.w))
+        vec3 I = normalize(vec3(posRelativeToCam-ioEyeSpacePosition));
+        vec3 R = reflect(I, normal);
+        outputColor = mix(vec4(ioVColor, 0.3), vec4(texture(skybox, R).rgb, 0.2), 0.5) * vec4(lightColor, 1.0);  //*vec4(lightColor, 1.0)
+        outputColor = mix(vec4(skyColor, 1.), outputColor, visibility);  //abs(ioEyeSpacePosition.z / ioEyeSpacePosition.w))
     }
 }

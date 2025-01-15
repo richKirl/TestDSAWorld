@@ -19,7 +19,7 @@ uniform vec4 vposRelativeToCam;
 include asset/shaders/tnoise.glsl
 
 vec3 lPos = vec3(0.0,3.0,0.0); 
-float density = 0.00035; 
+float density = 0.0035; 
 float gradient = 1.5; 
 
 void main() 
@@ -29,7 +29,7 @@ void main()
 
      if(time==0.0){ 
         wPos = model * vec4(vertexPosition,1.0); 
-        posRelativeToCam = view * wPos; 
+        posRelativeToCam = wPos; 
      	gl_Position = mvpMatrix*vec4(vertexPosition, 1.0); 
      } 
      if(time>0){ 
@@ -41,7 +41,7 @@ void main()
         newPos.y = wave; 
         newPos.y += vertexPosition.y + vNorm.y *displacement; 
         wPos = model * vec4(newPos,1.0); 
-        posRelativeToCam = view * wPos; 
+        posRelativeToCam = wPos; 
         vec4 dt=vec4(newPos, 1.0); 
      	gl_Position = mvpMatrix*dt; 
      } 
@@ -49,6 +49,6 @@ void main()
       ioVertexTexNormal = norm * vNorm;
    ioEyeSpacePosition = mvpMatrix * vec4(vertexPosition, 1.0);
    float distance = length(posRelativeToCam.xyz);
-   visibility = exp(- pow((distance * density), gradient));
+   visibility = exp(-pow((distance * density), gradient));
    visibility = clamp(visibility, 0.0, 1.0); 
 } 

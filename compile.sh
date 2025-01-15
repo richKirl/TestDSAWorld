@@ -26,4 +26,6 @@ Camera1/Camera1.h \
 Camera1/Camera1.c \
 Particles1/Particles1.h \
 Particles1/Particles1.c \
+Picking1/Picking.h \
+Picking1/Picking.c \
 -DGLEW_STATIC -lGL -lGLEW -lGLX -lm -DSHM -lassimp -lglfw

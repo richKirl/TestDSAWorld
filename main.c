@@ -11,6 +11,8 @@
 #include "Shaders1/MainShader.h"
 #include "Camera1/Camera1.h"
 #include "Particles1/Particles1.h"
+
+//test time
 #include "Picking1/Picking.h"
 
 bool firstMouse = false;
@@ -255,6 +257,7 @@ int main(int argc, char *argv[])
         //Water
         RenderObjectW(&water, &View, &Proj, 2, dt);
         }
+        //test time
         if(glfwGetMouseButton(win.win,GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS)
         {
             

@@ -1,4 +1,4 @@
-gcc -Ofast -o TestGame main.c \
+gcc -Ofast -ffast-math -msse4.1 -o TestGame main.c \
 Window1/Window1_t.h \
 Window1/Window1_t.c \
 Time1/Time1_t.h \
@@ -28,4 +28,8 @@ Particles1/Particles1.h \
 Particles1/Particles1.c \
 Picking1/Picking.h \
 Picking1/Picking.c \
+Heightmap1/Heightmap1.h \
+Heightmap1/Heightmap1.c \
+OLlist1/OLlist1.h \
+OLlist1/OLlist1.c \
 -DGLEW_STATIC -lGL -lGLEW -lGLX -lm -DSHM -lassimp -lglfw

@@ -13,7 +13,7 @@ struct Buff1_t
 typedef struct Buff1_t Buff1;
 
 void createVBOBuff(Buff1 *buff);
-void loadData(Buff1 *buff, size_t sz, size_t vn, bool Color, bool TexCoord, bool Normals, vec3 *verts, vec3 *norms, vec2 *texCoords, vec3 *colors);
+void loadData(Buff1 *buff, size_t sz, size_t vn, bool Color, bool TexCoord, bool Normals, vec3 *verts, vec3 *norms, vec2 *texCoords, vec3 *colors, bool withInds,int *Inds,int nn);
 void deleteVBOBuff(Buff1 *buff);
 void SetUniformMat4(mat4 *m,unsigned int ShaderProgram,const char* name);
 void SetUniformMat3(mat3 *m,unsigned int ShaderProgram,const char* name);

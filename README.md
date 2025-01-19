@@ -25,3 +25,7 @@ danceswithcode.net/engineeringnotes/quaternions/quaternions.html
 morphing in shader
 
 youtube.com/watch?v=KEMZR3unWTE
+
+base concepts
+
+mbsoftworks.sk/tutorials/opengl4/

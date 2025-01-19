@@ -11,10 +11,8 @@
 #include "Shaders1/MainShader.h"
 #include "Camera1/Camera1.h"
 #include "Particles1/Particles1.h"
-
-//test time
 #include "Picking1/Picking.h"
-
+#include "Heightmap1/Heightmap1.h"
 bool firstMouse = false;
 bool tab = false;
 bool mouseHandleInCenter=false;
@@ -73,6 +71,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
         if(firstMouse)
         {
+            glfwSetCursorPos(window, win.wi / 2, win.he / 2);
             glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             mouseHandleInCenter=!mouseHandleInCenter;
             firstMouse =!firstMouse;
@@ -81,7 +80,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
     else if(key == GLFW_KEY_F1 && action == GLFW_PRESS)
     {
-        screenshoot=!screenshoot;
+        
         if(screenshoot)
         {
 
@@ -214,14 +213,17 @@ int main(int argc, char *argv[])
     setFBO(&Obj2,&pick.shader);
 
 
-
-
+    Heightmap1 heitmap;
+    setShader(&heitmap,&Obj1.shaderMain);
+    initH(&heitmap,128,128,25,1,2,0.1f,0.7f);
+    SetPosRotScaleH(&heitmap, (vec3){0.0f, -2.0f, 0.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){200.f, 35.f, 200.f});
     // glEnable(GL_MULTISAMPLE_ARB);
     glEnable(GL_DEPTH_TEST);
-    // glClearDepth(1);
+    glClearDepth(1.0f);
     // glDisable(GL_DITHER);
     //   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //   testAddQ();
+    glClearColor(1.0f,1.0f,1.0f,1.0f);
     while (!glfwWindowShouldClose(win.win))
     {
         mat4 Proj = Perspectivem4(80.0f, (float)win.wi / win.he, 1.0f, 1100.0f);
@@ -239,7 +241,8 @@ int main(int argc, char *argv[])
         // Render
         //  Render()models;
         //-----------------------------------------------------------------------------------------
-        if(renderScene==true){
+        // if(renderScene==true){
+        bindFBOdefault(&pick);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // setLightAmbientAndDiffuse(&light,Obj1.shaderMain.shaderProgram,(vec3){0.0f,0.0f,5.0f},(vec3){0.8f, 0.8f, 0.8f},(vec3){0.0f,-1.0f,-1.0f},0.5f,true,(vec3){0.8f, 0.8f, 0.8f},false);
                 //GUI
@@ -254,68 +257,14 @@ int main(int argc, char *argv[])
         setLightAmbientAndDiffuse(&light, Obj1.shaderMain.shaderProgram, (vec3){0.0f, 0.0f, 5.0f}, (vec3){1.0f, 1.0f, 1.0f}, (vec3){0.0f, -1.0f, -1.0f}, 0.5f, true, (vec3){0.5f, 0.5f, 0.5f}, true);
         //Skybox
         RenderSkybox(&skybox, &View, &Proj);
+        //terrain
+        RenderHeightMap(&heitmap, &View, &Proj, 1);
         //Water
         RenderObjectW(&water, &View, &Proj, 2, dt);
-        }
-        //test time
-        if(glfwGetMouseButton(win.win,GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS)
-        {
-            
-        printf("LEFTBUTTON\n");
-        int r;
-        int g;
-        int b;       
-        int fr;
-        int fg;
-        int fb;
-        // glFlush();
-        bindFBO(&pick);
-        Initialize(win.wi,win.he);
-        glClearColor(1,1,1,1);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for(int i=0;i<2;i++){
-            r = idi[i] & 0xFF;
-            g = (idi[i] >> 8) & 0xFF;
-            b = (idi[i] >> 16) & 0xFF;
-            fr = r/255.0f;
-            fg = g/255.0f;
-            fb = b/255.0f;
-        }
-        // RenderObject(&Obj1, &View, &Proj, 1);
-        
-        // RenderObject(&Obj2, &View, &Proj, 1);
-        
-        bbrd(&pick);
-        // bindAsReadBindAsDrawBlit(&pick,win.wi,win.he);
-        RenderObjectFBO(&Obj1,&View,&Proj, (vec4){fr,fg,fb,1.0});
-        // RenderObjectFBO(&Obj2,&View,&Proj, (vec4){fr,fg,fb,1.0});
-        bindAsReadBindAsDrawBlit(&pick,win.wi,win.he);
-        // glReadBuffer(GL_FRONT);
-        unsigned char data[4];
-        // glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glReadPixels(win.wi / 2, win.he / 2, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
-        int gr,gg,gb;
-        gr=data[0];
-        gg=data[1];
-        gb=data[2];
-        int pickedID = gr | (gg<<8) | (gb << 16);
-        
-        // printf("mesh %d\n", pickedID);
-        if (pickedID == 0x00ffffff)
-        { // Full white, must be the background !
-            // message = "background";
-        }
-        else
-        {
-            // std::ostringstream oss; // C++ strings suck
-            printf("mesh %d\n", pickedID);
-            // message = oss.str();
-        }
-        // glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        
-        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        }
+        // }
+
         //-----------------------------------------------------------------------------------------
+        bindFBOdefault(&pick);
         // Present frame
         // UpdateBufferFromWindow
         // updateTime
@@ -325,7 +274,49 @@ int main(int argc, char *argv[])
             dt = 0.1f;
         dt += 0.01f;
         updateWindow(&win);
+        if(glfwGetMouseButton(win.win,GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS)
+        {
+            renderScene==false;
+        printf("LEFTBUTTON\n");
+        int r;
+        int g;
+        int b;       
+        int fr;
+        int fg;
+        int fb;
+        bindFBO(&pick);
+        Initialize(win.wi,win.he);
+        // 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        for(int i=0;i<2;i++){
+            r = idi[i] & 0xFF;
+            g = (idi[i] >> 8) & 0xFF;
+            b = (idi[i] >> 16) & 0xFF;
+            fr = r/255.0f;
+            fg = g/255.0f;
+            fb = b/255.0f;
+        }
+        RenderObjectFBO(&Obj1,&View,&Proj, (vec4){fr,fg,fb,1.0});
+        bindAsReadBindAsDrawBlit(&pick,win.wi,win.he);
+        unsigned char data[4];
+        glReadPixels(win.wi / 2, win.he / 2, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+        int gr,gg,gb;
+        gr=data[0];
+        gg=data[1];
+        gb=data[2];
+        int pickedID = gr | (gg<<8) | (gb << 16);
+        if (pickedID == 0x00ffffff)
+        { // Full white, must be the background !
+            // message = "background";
+        }
+        else
+        {
+            printf("mesh %d\n", pickedID);
+        }
+            renderScene=true;
+        }
     }
+    closeH(&heitmap);
     delbrd(&pick);
     closeParticles(&particke);
     CloseObject(&Obj1);

@@ -13,7 +13,7 @@ libnoise.sourceforge.net/noisegen/index.html
 
 wikipedia.org/wiki/Quaternion
 
-euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.htm
+euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.html
 
 danceswithcode.net/engineeringnotes/quaternions/quaternions.html
 

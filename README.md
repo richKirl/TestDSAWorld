@@ -7,13 +7,13 @@ Basic Water Sim and Somethink other
 
 Resources:
 
-www.youtube.com/watch?v=qChQrNWU9Xw
+youtube.com/watch?v=qChQrNWU9Xw
 
 libnoise.sourceforge.net/noisegen/index.html
 
-en.wikipedia.org/wiki/Quaternion
+wikipedia.org/wiki/Quaternion
 
-www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.htm
+euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.htm
 
 danceswithcode.net/engineeringnotes/quaternions/quaternions.html
 

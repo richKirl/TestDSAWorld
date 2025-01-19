@@ -17,3 +17,4 @@ euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.
 
 danceswithcode.net/engineeringnotes/quaternions/quaternions.html
 
+youtube.com/watch?v=KEMZR3unWTE

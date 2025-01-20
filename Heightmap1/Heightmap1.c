@@ -1,58 +1,67 @@
 #include "Heightmap1.h"
 #include <time.h>
-
+//generate number in range [min,max)
+int random1(int min, int max){
+    int number = min + rand() % (max - min);
+    return number; 
+}
 void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillRadiusMin, int hillRadiusMax, float hillMinHeight, float hillMaxHeight)
 {
     createVBOBuff(&heightmap->buffTemp);
-    printf("1\n");
+    // printf("1\n");
     heightmap->rows = rows;
     heightmap->columns = columns;
     heightmap->heighData = malloc(sizeof(float *) * rows);
     for (int i = 0; i < rows; i++)
     {
-        heightmap->heighData[i] = malloc(sizeof(float) * columns);
+        heightmap->heighData[i] = calloc(columns,sizeof(float) );
     }
-    printf("1\n");
-    // srand(time(NULL));
-    double sdd = time(NULL);
-    // int centerR = IntegerNoise (rows-1);
-    // int centerC = IntegerNoise (columns-1);
-    // int radius = getNoise(hillRadiusMin,hillRadiusMax,sdd);
-    // int height = getNoise(hillMinHeight,hillMaxHeight,sdd);
     // printf("1\n");
-    // for (int g = 0; g < numHills; g++)
-    // {
-    //     /* code */
-    //     double hillCenterRow = rand()%(rows-1);
-    // 	double hillCenterCol = rand()%(columns-1);
-    // 	double hillRadius = getNoise(hillRadiusMin,hillRadiusMax,sdd);
-    // 	double hillHeight = getNoise(hillMinHeight,hillMaxHeight,sdd);
+    srand(time(NULL));
+    double sdd = time(NULL);
+    // mt_state state;
+    // initialize_state(&state,sdd);
+    int centerR = uniform_int_distribution(1,(rows-1));
+    int centerC = uniform_int_distribution(1,(columns-1));
+    int radius = getNoise(hillRadiusMin,hillRadiusMax,sdd);
+    int height = getNoise(hillMinHeight,hillMaxHeight,sdd);
+    // memset(&heightmap->heighData[0],0,sizeof(float)*rows*columns);
+    // memset(heightmap->heighData, 0, sizeof(float)*rows*columns);
+    // printf("1\n");
+    for (int i = 0; i < numHills; i++)
+    {
+    
+      int hillCenterRow = random1(0,(rows-1));
+      int hillCenterCol = random1(0,(columns-1));
+      int hillRadius = random1(hillRadiusMin,hillRadiusMax);
+      float hillHeight = random1(hillMinHeight,hillMaxHeight);
+      if(hillHeight<0)hillHeight=0.0f;
 
-    //     for (int i = hillCenterRow - hillRadius; i < hillCenterRow + hillRadius; i++)
-    //     {
-    //         for (int j = hillCenterCol - hillRadius; j < hillCenterCol + hillRadius; j++)
-    //         {
-    //             if (i < 0 || i >= rows || j < 0 || j >= columns)
-    //             {
-    //                 continue;
-    //             }
-    //             double r2 = hillRadius * hillRadius;
-    //             double x21 = hillCenterCol - j;
-    //             double y21 = hillCenterRow - i;
-    //             double height = (r2 - x21 * x21 - y21 * y21);
-    //             if (height < 0.0f)
-    //             {
-    //                 continue;
-    //             }
-    //             double factor = (float)height / r2;
-    //             heightmap->heighData[i][j] += hillHeight * (factor);
-
-    //             // if(heightmap->heighData[i][j] > NAN){ heightmap->heighData[i][j] = 1.0f;}
-    //             // if(heightmap->heighData[i][j] < -NAN){ heightmap->heighData[i][j] = -1.0f;}
-    //             // printf("heightmap->heighData[i][j] %f\n",heightmap->heighData[i][j]);
-    //         }
-    //     }
-    // }
+      for (int r = hillCenterRow - hillRadius; r < hillCenterRow + hillRadius; r++)
+      {
+        for (int c = hillCenterCol - hillRadius; c < hillCenterCol + hillRadius; c++)
+        {
+          if (r < 0 || r >= rows || c < 0 || c >= columns)
+          {
+            continue;
+          }
+          int r2 = hillRadius * hillRadius; // r*r term
+          int x2x1 = hillCenterCol - c;     // (x2-x1) term
+          int y2y1 = hillCenterRow - r;     // (y2-y1) term
+          float height = (float)(r2 - (x2x1 * x2x1) - (y2y1 * y2y1));
+          if (height < 0.0f)
+          {
+            continue;
+          }
+          float factor = height / r2;
+          heightmap->heighData[r][c] += hillHeight*factor;
+          if (heightmap->heighData[r][c] > 1.0f)
+          {
+            heightmap->heighData[r][c] = 1.0f;
+          }
+        }
+      }
+    }
     // printf("1\n");
     vec3 **h1dataV = malloc(sizeof(vec3 *) * rows);
     for (int i = 0; i < rows; i++)
@@ -67,16 +76,16 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
     double tq = 0;
     double rrrrrr;
 
-    printf("1\n");
+    // printf("1\n");
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < columns; j++)
         {
-            float factorRow = (float)i / (rows - 1);
-            float factorColumn = (float)j / (columns - 1);
+            float factorRow = (float)i / (float)(rows - 1);
+            float factorColumn = (float)j / (float)(columns - 1);
             float vertexHeight = heightmap->heighData[i][j];
-            rrrrrr = getImterpolatedNoise((double)j / 10.0f, (double)i / 10.0f, sdd);
-            h1dataV[i][j] = (vec3){-0.5f + factorColumn, rrrrrr, -0.5f + factorRow};
+            rrrrrr = getImterpolatedNoise((double)j/2, (double)i/2, sdd);
+            h1dataV[i][j] = (vec3){-0.5f+factorColumn, vertexHeight,-0.5f+factorRow};
             heightmap->ColorObj[VCount] = (vec3){0.1, 0.3, 0.1};
             VCount += 1;
         }
@@ -181,13 +190,38 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
         heightmap->Inds[VCount] = rows * columns;
         VCount += 1;
     }
-    printf("1\n");
+    // printf("1\n");
     heightmap->sumt = (rows - 1) * (columns) * 2 + (rows - 1);
 
     heightmap->sumInds = rows * columns;
-    printf("1\n");
+    // printf("1\n");
     loadData(&heightmap->buffTemp, 9, heightmap->sumInds, true, false, true, heightmap->VertObj, heightmap->NormalsObj, NULL, heightmap->ColorObj, true, heightmap->Inds, heightmap->sumt);
-    printf("1\n");
+    // printf("1\n");
+
+    for (int l = 0; l < heightmap->columns; l++)
+    {
+        free((vec3 *)h1dataV[l]);
+        // printf("%d\n",nlinesV);
+    }
+    free((vec3 **)h1dataV);
+    for (int l = 0; l < heightmap->columns; l++)
+    {
+        free((vec3 *)normalsV[l]);
+        // printf("%d\n",nlinesV);
+    }
+    free((vec3 **)normalsV);
+    // vec3 **tempnormalsV[2];
+    for (int i = 0; i < 2; i++)
+    {
+        
+        for (int j = 0; j < rows - 1; j++)
+        {
+            free((vec3 *)tempnormalsV[i][j]);
+        }
+        free((vec3 **)tempnormalsV[i]);
+    }
+
+
     free(heightmap->VertObj);
     free(heightmap->ColorObj);
     free(heightmap->NormalsObj);

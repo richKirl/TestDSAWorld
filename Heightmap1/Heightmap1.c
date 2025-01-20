@@ -77,15 +77,10 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
 
     }
 
-    vec3 **tempnormalsV[2];
-    for (int i = 0; i < 2; i++)
-    {
-        tempnormalsV[i] = malloc(sizeof(vec3 *) * rows - 1);
-        for (int j = 0; j < rows - 1; j++)
-        {
-            tempnormalsV[i][j] = malloc(sizeof(vec3) * columns - 1);
-        }
-    }
+    vec3 *tempnormalsV[2];
+    tempnormalsV[0]=malloc((sizeof(vec3))*rows*columns);
+    tempnormalsV[1]=malloc((sizeof(vec3))*rows*columns);
+
     for (int i = 0; i < rows-1; i++)
     {
         for (int j = 0; j < columns-1; j++)
@@ -100,8 +95,8 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             vec3 triangleNormalA = Crossv3(Subv3(v2, v1), Subv3(v1, v4));
             vec3 triangleNormalB = Crossv3(Subv3(v4, v3), Subv3(v3, v2));
 
-            tempnormalsV[0][i][j] = Normalizev3(triangleNormalA);
-            tempnormalsV[1][i][j] = Normalizev3(triangleNormalB);
+            tempnormalsV[0][(i)*columns+(j)] = Normalizev3(triangleNormalA);
+            tempnormalsV[1][(i)*columns+(j)] = Normalizev3(triangleNormalB);
         }
     }
     int countN=0;
@@ -122,7 +117,7 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             // Look for triangle to the upper-left
             if (!isFirstRow && !isFirstColumn)
             {
-                finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[0][i - 1][j - 1]);
+                finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[0][(i-1)*columns+(j-1)]);
             }
 
             // Look for triangles to the upper-right
@@ -130,14 +125,14 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             {
                 for (int k = 0; k < 2; k++)
                 {
-                    finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[k][i - 1][j]);
+                    finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[k][(i-1)*columns+(j)]);
                 }
             }
 
             // Look for triangle to the bottom-right
             if (!isLastRow && !isLastColumn)
             {
-                finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[0][i][j]);
+                finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[0][(i)*columns+(j)]);
             }
 
             // Look for triangles to the bottom-right
@@ -145,7 +140,7 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             {
                 for (int k = 0; k < 2; k++)
                 {
-                    finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[k][i][j - 1]);
+                    finalVertexNormal = Addv3(finalVertexNormal, tempnormalsV[k][(i)*columns+(j-1)]);
                 }
             }
 
@@ -181,16 +176,8 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
 
     loadData(&heightmap->buffTemp, 9, heightmap->sumInds, true, false, true, heightmap->VertObj, heightmap->NormalsObj, NULL, heightmap->ColorObj, true, heightmap->Inds, heightmap->sumt);
 
-    for (int i = 0; i < 2; i++)
-    {
-        
-        for (int j = 0; j < rows - 1; j++)
-        {
-            free((vec3 *)tempnormalsV[i][j]);
-        }
-        free((vec3 **)tempnormalsV[i]);
-    }
-
+    free(tempnormalsV[0]);//=malloc((sizeof(vec3))*rows*columns);
+    free(tempnormalsV[1]);//=malloc((sizeof(vec3))*rows*columns);
 
     free(heightmap->VertObj);
     free(heightmap->ColorObj);

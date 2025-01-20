@@ -1,14 +1,10 @@
 #include "Heightmap1.h"
 #include <time.h>
-//generate number in range [min,max)
-int random1(int min, int max){
-    int number = min + rand() % (max - min);
-    return number; 
-}
+
 void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillRadiusMin, int hillRadiusMax, float hillMinHeight, float hillMaxHeight)
 {
     createVBOBuff(&heightmap->buffTemp);
-    // printf("1\n");
+
     heightmap->rows = rows;
     heightmap->columns = columns;
     heightmap->heighData = malloc(sizeof(float *) * rows);
@@ -16,18 +12,11 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
     {
         heightmap->heighData[i] = calloc(columns,sizeof(float) );
     }
-    // printf("1\n");
+
     srand(time(NULL));
     double sdd = time(NULL);
-    // mt_state state;
-    // initialize_state(&state,sdd);
-    int centerR = uniform_int_distribution(1,(rows-1));
-    int centerC = uniform_int_distribution(1,(columns-1));
-    int radius = getNoise(hillRadiusMin,hillRadiusMax,sdd);
-    int height = getNoise(hillMinHeight,hillMaxHeight,sdd);
-    // memset(&heightmap->heighData[0],0,sizeof(float)*rows*columns);
-    // memset(heightmap->heighData, 0, sizeof(float)*rows*columns);
-    // printf("1\n");
+
+
     for (int i = 0; i < numHills; i++)
     {
     
@@ -35,7 +24,7 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
       int hillCenterCol = random1(0,(columns-1));
       int hillRadius = random1(hillRadiusMin,hillRadiusMax);
       float hillHeight = random1(hillMinHeight,hillMaxHeight);
-      if(hillHeight<0)hillHeight=0.0f;
+    //   if(hillHeight<0)hillHeight=0.0f;
 
       for (int r = hillCenterRow - hillRadius; r < hillCenterRow + hillRadius; r++)
       {
@@ -45,9 +34,9 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
           {
             continue;
           }
-          int r2 = hillRadius * hillRadius; // r*r term
-          int x2x1 = hillCenterCol - c;     // (x2-x1) term
-          int y2y1 = hillCenterRow - r;     // (y2-y1) term
+          int r2 = hillRadius * hillRadius;
+          int x2x1 = hillCenterCol - c;     
+          int y2y1 = hillCenterRow - r;     
           float height = (float)(r2 - (x2x1 * x2x1) - (y2y1 * y2y1));
           if (height < 0.0f)
           {
@@ -62,12 +51,7 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
         }
       }
     }
-    // printf("1\n");
-    vec3 **h1dataV = malloc(sizeof(vec3 *) * rows);
-    for (int i = 0; i < rows; i++)
-    {
-        h1dataV[i] = malloc(sizeof(vec3) * columns);
-    }
+
     heightmap->VertObj = malloc(sizeof(vec3) * rows * columns);
     heightmap->ColorObj = malloc(sizeof(vec3) * rows * columns);
     heightmap->NormalsObj = malloc(sizeof(vec3) * rows * columns);
@@ -84,18 +68,15 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             float factorRow = (float)i / (float)(rows - 1);
             float factorColumn = (float)j / (float)(columns - 1);
             float vertexHeight = heightmap->heighData[i][j];
-            rrrrrr = getImterpolatedNoise((double)j/2, (double)i/2, sdd);
-            h1dataV[i][j] = (vec3){-0.5f+factorColumn, vertexHeight,-0.5f+factorRow};
+            // rrrrrr = getImterpolatedNoise((double)j/2, (double)i/2, sdd);
+            // heightmap->VertObj[VCount]=(vec3){-0.5f+factorColumn, vertexHeight,-0.5f+factorRow};
+            heightmap->VertObj[VCount] = (vec3){-0.5f+factorColumn, vertexHeight,-0.5f+factorRow};
             heightmap->ColorObj[VCount] = (vec3){0.1, 0.3, 0.1};
             VCount += 1;
         }
-        memcpy(&heightmap->VertObj[i * columns], &h1dataV[i][0], columns * sizeof(vec3));
+
     }
-    vec3 **normalsV = malloc(sizeof(vec3 *) * rows);
-    for (int i = 0; i < rows; i++)
-    {
-        normalsV[i] = malloc(sizeof(vec3) * columns);
-    }
+
     vec3 **tempnormalsV[2];
     for (int i = 0; i < 2; i++)
     {
@@ -105,14 +86,15 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             tempnormalsV[i][j] = malloc(sizeof(vec3) * columns - 1);
         }
     }
-    for (int i = 0; i < rows - 1; i++)
+    for (int i = 0; i < rows-1; i++)
     {
-        for (int j = 0; j < columns - 1; j++)
+        for (int j = 0; j < columns-1; j++)
         {
-            vec3 v1 = h1dataV[i][j];
-            vec3 v2 = h1dataV[i][j + 1];
-            vec3 v3 = h1dataV[i + 1][j + 1];
-            vec3 v4 = h1dataV[i + 1][j];
+
+            vec3 v1 = heightmap->VertObj[(i)*columns+(j)];
+            vec3 v2 = heightmap->VertObj[(i)*columns+(j+1)];
+            vec3 v3 = heightmap->VertObj[(i+1)*columns+(j+1)];
+            vec3 v4 = heightmap->VertObj[(i+1)*columns+(j)];           
 
             // const auto triangleNormalA = glm::cross(vertexB - vertexA, vertexA - vertexD);
             vec3 triangleNormalA = Crossv3(Subv3(v2, v1), Subv3(v1, v4));
@@ -122,6 +104,7 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             tempnormalsV[1][i][j] = Normalizev3(triangleNormalB);
         }
     }
+    int countN=0;
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < columns; j++)
@@ -167,9 +150,10 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
             }
 
             // Store final normal of j-th vertex in i-th row
-            normalsV[i][j] = Normalizev3(finalVertexNormal);
+            heightmap->NormalsObj[countN] = Normalizev3(finalVertexNormal);
+            countN++;
         }
-        memcpy(&heightmap->NormalsObj[i * columns], &normalsV[i][0], columns * sizeof(vec3));
+
     }
     // tempnormalsV[0][1023][1023];
     VCount = 0;
@@ -190,27 +174,13 @@ void initH(Heightmap1 *heightmap, int rows, int columns, int numHills, int hillR
         heightmap->Inds[VCount] = rows * columns;
         VCount += 1;
     }
-    // printf("1\n");
+
     heightmap->sumt = (rows - 1) * (columns) * 2 + (rows - 1);
 
     heightmap->sumInds = rows * columns;
-    // printf("1\n");
-    loadData(&heightmap->buffTemp, 9, heightmap->sumInds, true, false, true, heightmap->VertObj, heightmap->NormalsObj, NULL, heightmap->ColorObj, true, heightmap->Inds, heightmap->sumt);
-    // printf("1\n");
 
-    for (int l = 0; l < heightmap->columns; l++)
-    {
-        free((vec3 *)h1dataV[l]);
-        // printf("%d\n",nlinesV);
-    }
-    free((vec3 **)h1dataV);
-    for (int l = 0; l < heightmap->columns; l++)
-    {
-        free((vec3 *)normalsV[l]);
-        // printf("%d\n",nlinesV);
-    }
-    free((vec3 **)normalsV);
-    // vec3 **tempnormalsV[2];
+    loadData(&heightmap->buffTemp, 9, heightmap->sumInds, true, false, true, heightmap->VertObj, heightmap->NormalsObj, NULL, heightmap->ColorObj, true, heightmap->Inds, heightmap->sumt);
+
     for (int i = 0; i < 2; i++)
     {
         
@@ -248,13 +218,12 @@ void RenderHeightMap(Heightmap1 *heightmap, mat4 *view, mat4 *proj, int type)
         heightmap->model.v[8], heightmap->model.v[9], heightmap->model.v[10]}));
     SetUniformMat3(&t, heightmap->shaderMain.shaderProgram, "norm");
 
-    // glDrawArrays(GL_TRIANGLES, 0, heightmap->sumInds);
     glEnable(GL_PRIMITIVE_RESTART);
     glPrimitiveRestartIndex(heightmap->sumInds);
 
     glDrawElements(GL_TRIANGLE_STRIP, heightmap->sumt, GL_UNSIGNED_INT, 0);
     glDisable(GL_PRIMITIVE_RESTART);
-    // glBindVertexArray(0);
+    glBindVertexArray(0);
 }
 
 void SetPosRotScaleH(Heightmap1 *heightmap, vec3 p, float rotateDegree, vec3 rotateX, vec3 rotateY, vec3 rotateZ, vec3 scale)

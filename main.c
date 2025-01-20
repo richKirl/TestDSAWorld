@@ -172,8 +172,8 @@ int main(int argc, char *argv[])
     SetPosRotScale(&Obj1, (vec3){20.0f, -1.0f, -15.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){5.5f, 5.5f, 5.5f});
     SetPosRotScale(&Obj2, (vec3){-10.0f, -1.0f, -15.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){2.5f, 2.5f, 2.5f});
     Water1 water;
-    PreparePlane(&water, &Obj1.shaderMain, 0, 0, 200);
-    SetPosRotScaleW(&water, (vec3){-100.0f, 1.24f,-100.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){1.f, 1.f, 1.f});
+    PreparePlane(&water, &Obj1.shaderMain, 0, 0, 200);//water/orplaneforcavern00200,-200,1.24,-200
+    SetPosRotScaleW(&water, (vec3){-200.0f, 1.24f,-200.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){4.f, 1.f, 4.f});
 
     Light1 light;
     // setLightAmbientAndDiffuse(&light,Obj1.shaderMain.shaderProgram,(vec3){0.0f,0.0f,5.0f},(vec3){1.0f,1.0f,1.0f},(vec3){0.0f,-1.0f,-1.0f},0.5f,true,(vec3){0.5f,0.5f,0.5f},true);
@@ -194,12 +194,12 @@ int main(int argc, char *argv[])
 
     Heightmap1 heitmap;
     setShader(&heitmap, &Obj1.shaderMain);
-    initH(&heitmap, 200, 200, 125, 10, 20, 1, 3);
-    SetPosRotScaleH(&heitmap, (vec3){0.0f, 0.0f, 0.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){200.f, 10.f, 200.f});
+    initH(&heitmap, 200, 200, 125, 10, 20, 1, 3); //caverns (200,200,125,10,20,1,3)scale400,50,400
+    SetPosRotScaleH(&heitmap, (vec3){0.0f, 0.0f, 0.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){400.f, 50.f, 400.f});
     // glEnable(GL_MULTISAMPLE_ARB);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0f);
-    // glDisable(GL_DITHER);
+    glDisable(GL_DITHER);
     //   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //   testAddQ();
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);

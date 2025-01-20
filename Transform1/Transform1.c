@@ -17,11 +17,13 @@ void SetPRS(Transform1 *transform,vec3 p,float rotateDegree, vec3 rotateX, vec3 
     // q.v[3]=1;
     // q=Qidentity();
     q=QAngleAxisdV3(rotateDegree,(vec3){rotateX.x,rotateY.y,rotateZ.z});
-    if(scale.x!=0&&scale.y!=0&&scale.z!=0)
+    // if(scale.x!=0&&scale.y!=0&&scale.z!=0)
         transform->Scale= Scalem4v3(transform->Scale,scale);
     
     transform->Rotate = ToMatrixQQ1(q);
-    transform->model= Mulm4(Mulm4(transform->Translate,transform->Rotate),transform->Scale);
+    transform->model= Mulm4(transform->model,transform->Translate);
+    transform->model= Mulm4(transform->model,transform->Rotate);//,transform->Scale
+    transform->model= Mulm4(transform->model,transform->Scale);
 }
 
 mat4 GetModel(Transform1 *transform)

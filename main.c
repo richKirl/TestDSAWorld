@@ -83,7 +83,7 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
         if (screenshoot)
         {
 
-            //             {
+            // {
             // // glBindTexture(GL_TEXTURE_2D, compressed_decal_map);
             // // glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_ARB, width, height,0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
             // // glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_ARB, &compressed);
@@ -120,12 +120,6 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
             sFile = fopen("Screen.tga", "wb");
             fwrite(tgaHeader, sizeof(tgaHeader), 1, sFile);
             fwrite(header, sizeof(header), 1, sFile);
-            // for (int i = 0; i < win.wi * win.he * colorMode; i += colorMode)
-            // {
-            //     tempColors = output[i];
-            //     output[i] = output[i + 2];
-            //     output[i + 2] = tempColors;
-            // }
 
             // Записываем данные изображения:
             fwrite(output, win.wi * win.he * colorMode, 1, sFile);
@@ -179,7 +173,7 @@ int main(int argc, char *argv[])
     SetPosRotScale(&Obj2, (vec3){-10.0f, -1.0f, -15.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){2.5f, 2.5f, 2.5f});
     Water1 water;
     PreparePlane(&water, &Obj1.shaderMain, 0, 0, 200);
-    SetPosRotScaleW(&water, (vec3){-100.0f, -2.24f, -100.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){1.f, 1.f, 1.f});
+    SetPosRotScaleW(&water, (vec3){-100.0f, 1.24f,-100.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){1.f, 1.f, 1.f});
 
     Light1 light;
     // setLightAmbientAndDiffuse(&light,Obj1.shaderMain.shaderProgram,(vec3){0.0f,0.0f,5.0f},(vec3){1.0f,1.0f,1.0f},(vec3){0.0f,-1.0f,-1.0f},0.5f,true,(vec3){0.5f,0.5f,0.5f},true);
@@ -200,8 +194,8 @@ int main(int argc, char *argv[])
 
     Heightmap1 heitmap;
     setShader(&heitmap, &Obj1.shaderMain);
-    initH(&heitmap, 128, 128, 25, 1, 2, 0.1f, 0.7f);
-    SetPosRotScaleH(&heitmap, (vec3){0.0f, -2.0f, 0.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){200.f, 35.f, 200.f});
+    initH(&heitmap, 200, 200, 125, 10, 20, 1, 3);
+    SetPosRotScaleH(&heitmap, (vec3){0.0f, 0.0f, 0.0f}, 0.0f, (vec3){1.0f, 0.0f, 0.0f}, (vec3){0.0f, 1.0f, 0.0f}, (vec3){0.0f, 0.0f, 1.0f}, (vec3){200.f, 10.f, 200.f});
     // glEnable(GL_MULTISAMPLE_ARB);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0f);
@@ -261,7 +255,7 @@ int main(int argc, char *argv[])
         updateWindow(&win);
         if (glfwGetMouseButton(win.win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
-            renderScene == false;
+            renderScene = false;
             printf("LEFTBUTTON\n");
             int r;
             int g;

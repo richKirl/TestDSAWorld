@@ -32,4 +32,6 @@ Heightmap1/Heightmap1.h \
 Heightmap1/Heightmap1.c \
 OLlist1/OLlist1.h \
 OLlist1/OLlist1.c \
--DGLEW_STATIC -lGL -lGLEW -lGLX -lm -DSHM -lassimp -lglfw
+Configs1/Configs1.h \
+Configs1/Configs1.c \
+-DGLEW_STATIC -lGL -lGLEW -lGLX -lm -D_GNU_SOURCE -DSHM -lassimp -lglfw -Iinclude/lua/src -Llibs/lua -llua

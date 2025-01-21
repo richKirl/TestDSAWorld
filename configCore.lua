@@ -1,4 +1,4 @@
-arg =
+Core =
 {
 test = "its just string",
 

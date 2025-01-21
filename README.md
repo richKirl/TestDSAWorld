@@ -33,3 +33,5 @@ youtube.com/watch?v=KEMZR3unWTE
 base concepts
 
 mbsoftworks.sk/tutorials/opengl4/
+
+learnopengl.com
